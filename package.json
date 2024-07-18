@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "author": "lucky980421 <huangyongzheng0421@163.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "umi": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "typescript": "^5",
+    "@umijs/plugins": "^4.3.6",
+    "husky": "^9",
+    "prettier": "^2",
+    "lint-staged": "^13",
+    "tailwindcss": "^3"
+  }
+}
