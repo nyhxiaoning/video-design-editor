@@ -93,6 +93,7 @@ export const TimelineEditor = ({
           if (null === el) return;
           timelineState.current = el;
         }}
+        style={{ width: "100%", height: "250px", background: "#181a1f" }}
         effects={{}}
         dragLine={true}
         gridSnap={true}
