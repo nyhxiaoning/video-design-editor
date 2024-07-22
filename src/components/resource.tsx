@@ -2,13 +2,12 @@ import imageIcon from "@/assets/svg/image.svg";
 import audioIcon from "@/assets/svg/audio.svg";
 import textIcon from "@/assets/svg/text.svg";
 import videoIcon from "@/assets/svg/video.svg";
-import React, { useState } from "react";
+import { useState } from "react";
 import VideoResource from "./resource/video";
 import TextResource from "./resource/text";
 import ImageResource from "./resource/image";
 import AudioResource from "./resource/audio";
-import { useDispatch } from "umi";
-import { AudioClip, MP4Clip } from "@webav/av-cliper";
+import { AudioClip, ImgClip, MP4Clip, VisibleSprite } from "@webav/av-cliper";
 const menuData = [
   {
     title: "视频",
@@ -37,9 +36,12 @@ const componentMap = new Map([
   ["image", ImageResource],
   ["audio", AudioResource],
 ]);
-const EditorResource = () => {
+const EditorResource = ({
+  addSprite2Track,
+}: {
+  addSprite2Track: (trackId: string, spr: VisibleSprite, name: string) => void;
+}) => {
   const [currentComponentKey, setCurrentComponentKey] = useState("video");
-  const dispatch = useDispatch();
   const renderComponent = () => {
     const Component = componentMap.get(currentComponentKey);
     if (Component) {
@@ -52,21 +54,24 @@ const EditorResource = () => {
             type: string;
             data: Record<string, any>;
           }) => {
-            const params = {
-              type,
-              source: data.source,
-            };
-            if (type === "video") {
-              const mp4 = new MP4Clip((await fetch(data?.source)).body!);
-              await mp4.ready;
-            } else if (type === "audio") {
-              const audio = new AudioClip((await fetch(data?.source)).body!);
-              await audio.ready;
+            if ("video" === type) {
+              const spr = new VisibleSprite(
+                new MP4Clip((await fetch(data?.source)).body!)
+              );
+              addSprite2Track("1-video", spr, data?.name);
+            } else if ("audio" === type) {
+              const spr = new VisibleSprite(
+                new AudioClip((await fetch(data?.source)).body!)
+              );
+              addSprite2Track("2-audio", spr, data?.name);
+            } else if ("image" === type) {
+              const clip = new ImgClip({
+                type: "image/gif",
+                stream: (await fetch(data?.source)).body!,
+              });
+              const spr = new VisibleSprite(clip);
+              addSprite2Track("3-img", spr, data?.name);
             }
-            dispatch({
-              type: "track/addTrack",
-              payload: params,
-            });
           }}
         />
       );

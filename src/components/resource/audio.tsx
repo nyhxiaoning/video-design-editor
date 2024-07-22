@@ -6,10 +6,12 @@ import addIcon from "@/assets/svg/add.svg";
 const AudioCard = ({
   name,
   cover,
+  add,
 }: {
   id: number;
   name: string;
   cover: string;
+  add: () => void;
 }) => {
   const [duration] = useState(0);
   return (
@@ -21,18 +23,32 @@ const AudioCard = ({
           {convertMicrosecondsToPlayerTime(duration, false)}
         </p>
       </div>
-      <img src={addIcon} className="absolute right-[5px] cursor-pointer" />
+      <img
+        src={addIcon}
+        className="absolute right-[5px] cursor-pointer"
+        onClick={add}
+      />
     </div>
   );
 };
-const AudioResource = ({}: {
+const AudioResource = ({
+  add,
+}: {
   add: (params: { type: string; data: any }) => void;
 }) => {
   const { data } = useRequest(getResoueceConfig, { defaultParams: ["audio"] });
   return (
     <div className="flex flex-col gap-y-3">
       {data?.data?.data.map((item: any) => {
-        return <AudioCard key={item.id} {...item}></AudioCard>;
+        return (
+          <AudioCard
+            key={item.id}
+            {...item}
+            add={() => {
+              add({ type: "audio", data: item });
+            }}
+          ></AudioCard>
+        );
       })}
     </div>
   );

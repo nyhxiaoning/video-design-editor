@@ -5,6 +5,7 @@ import deleteIcon from "@/assets/svg/delete.svg";
 import plusIcon from "@/assets/svg/plus.svg";
 import loseIcon from "@/assets/svg/lose.svg";
 import { Slider } from "antd";
+import "antd/dist/antd.css";
 import {
   Timeline,
   TimelineAction,
@@ -71,12 +72,12 @@ export const TimelineEditor = ({
             }}
           />
           <Slider
+            className="w-[96px]"
             value={scale}
             onChange={(value) => {
               setScale(value);
             }}
-            className="w-[96px]"
-          />
+          ></Slider>
           <img
             src={plusIcon}
             className={`ml-5 ${
@@ -95,6 +96,7 @@ export const TimelineEditor = ({
         }}
         style={{ width: "100%", height: "250px", background: "#181a1f" }}
         effects={{}}
+        scale={scale}
         dragLine={true}
         gridSnap={true}
         editorData={tlData}
