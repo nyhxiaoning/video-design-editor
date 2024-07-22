@@ -7,6 +7,8 @@ import VideoResource from "./resource/video";
 import TextResource from "./resource/text";
 import ImageResource from "./resource/image";
 import AudioResource from "./resource/audio";
+import { useDispatch } from "umi";
+import { AudioClip, MP4Clip } from "@webav/av-cliper";
 const menuData = [
   {
     title: "视频",
@@ -37,8 +39,44 @@ const componentMap = new Map([
 ]);
 const EditorResource = () => {
   const [currentComponentKey, setCurrentComponentKey] = useState("video");
+  const dispatch = useDispatch();
+  const renderComponent = () => {
+    const Component = componentMap.get(currentComponentKey);
+    if (Component) {
+      return (
+        <Component
+          add={async ({
+            type,
+            data,
+          }: {
+            type: string;
+            data: Record<string, any>;
+          }) => {
+            const params = {
+              type,
+              source: data.source,
+            };
+            if (type === "video") {
+              const mp4 = new MP4Clip((await fetch(data?.source)).body!);
+              await mp4.ready;
+            } else if (type === "audio") {
+              const audio = new AudioClip((await fetch(data?.source)).body!);
+              await audio.ready;
+            }
+            dispatch({
+              type: "track/addTrack",
+              payload: params,
+            });
+          }}
+        />
+      );
+    }
+    // 如果组件不存在，可以返回null或一些加载/错误指示器
+    return null;
+  };
+
   return (
-    <div className="w-[386px] border-[#101214] border-solid border-r-2 flex">
+    <div className="w-[386px] min-w-[386px] border-[#101214] border-solid border-r-2 flex">
       <div className="w-[76px] border-[#101214] border-solid border-r-2 px-[3px]">
         {menuData.map((item, key) => {
           return (
@@ -59,15 +97,7 @@ const EditorResource = () => {
           );
         })}
       </div>
-      <div>
-        {componentMap.get(currentComponentKey) &&
-          React.createElement(componentMap.get(currentComponentKey), {
-            add: ({ type, data }: { type: string; data: any }) => {
-              console.log("type :>> ", type);
-              console.log("data :>> ", data);
-            },
-          })}
-      </div>
+      <div className="p-4 grow">{renderComponent()}</div>
     </div>
   );
 };
