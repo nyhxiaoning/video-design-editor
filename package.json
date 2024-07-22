@@ -10,10 +10,16 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@formily/antd": "^2.3.2",
+    "@formily/core": "^2.3.2",
+    "@formily/react": "^2.3.2",
     "@webav/av-canvas": "^0.13.9",
     "@webav/av-cliper": "^0.13.9",
     "@xzdarcy/react-timeline-editor": "^0.1.9",
-    "antd": "^5.19.2",
+    "ahooks": "^3.8.0",
+    "antd": "^4.22.8",
+    "axios": "^1.7.2",
+    "moment": "^2.30.1",
     "umi": "^4.3.6"
   },
   "devDependencies": {
