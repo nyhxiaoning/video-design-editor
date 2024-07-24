@@ -18,6 +18,7 @@ import fullIcon from "@/assets/svg/full.svg";
 import { ImgClip, VisibleSprite } from "@webav/av-cliper";
 import { message } from "antd";
 const actionSpriteMap = new WeakMap<TimelineAction, VisibleSprite>();
+import { useFullscreen, useToggle } from "react-use";
 const EditorPage = () => {
   const tlState = useRef<TimelineState>();
   const [tlData, setTLData] = useState<TimelineRow[]>([
@@ -32,6 +33,13 @@ const EditorPage = () => {
   const [cvsWrapEl, setCvsWrapEl] = useState<HTMLDivElement | null>(null);
   const [currentPlayTime, setCurrentPlayTime] = useState(0);
   const [totalTime] = useState(0);
+  const editor = useRef<HTMLDivElement | null>(null);
+  const [show, toggle] = useToggle(false);
+  useFullscreen(editor, show, {
+    onClose: () => {
+      toggle(false);
+    },
+  });
   useEffect(() => {
     if (cvsWrapEl == null) return;
     avCvs?.destroy();
@@ -98,8 +106,14 @@ const EditorPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <EditorHeader hadnleSave={() => handleSave()}></EditorHeader>
+    <div className="flex flex-col h-full" ref={editor}>
+      <EditorHeader
+        hadnleSave={() => handleSave()}
+        fullToggle={() => {
+          toggle();
+        }}
+        isFull={show}
+      ></EditorHeader>
       <div className="flex grow w-full">
         <EditorResource addSprite2Track={addSprite2Track}></EditorResource>
         <div className="grow flex flex-col">
