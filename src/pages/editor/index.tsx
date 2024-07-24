@@ -16,6 +16,7 @@ import pauseIcon from "@/assets/svg/pause.svg";
 import playIcon from "@/assets/svg/play.svg";
 import fullIcon from "@/assets/svg/full.svg";
 import { ImgClip, VisibleSprite } from "@webav/av-cliper";
+import { message } from "antd";
 const actionSpriteMap = new WeakMap<TimelineAction, VisibleSprite>();
 const EditorPage = () => {
   const tlState = useRef<TimelineState>();
@@ -56,9 +57,7 @@ const EditorPage = () => {
     };
   }, [cvsWrapEl]);
 
-  useEffect(() => {
-    localStorage.setItem("trackData", JSON.stringify(tlData));
-  }, [tlData]);
+  useEffect(() => {}, [tlData]);
 
   async function addSprite2Track(
     trackId: string,
@@ -93,9 +92,14 @@ const EditorPage = () => {
     );
   }
 
+  function handleSave() {
+    localStorage.setItem("trackData", JSON.stringify(tlData));
+    message.success("保存成功");
+  }
+
   return (
     <div className="flex flex-col h-full">
-      <EditorHeader></EditorHeader>
+      <EditorHeader hadnleSave={() => handleSave()}></EditorHeader>
       <div className="flex grow w-full">
         <EditorResource addSprite2Track={addSprite2Track}></EditorResource>
         <div className="grow flex flex-col">
