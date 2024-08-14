@@ -33,7 +33,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: "pnpm"
       - name: Install packages dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
@@ -42,9 +42,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
-          path: ./dist
+           name: demo-site-build  # 自定义artifact的名称
+           path: ./dist           # 指定要上传的文件或目录
 
       - name: Deploy to GitHub Pages
         id: deployment
